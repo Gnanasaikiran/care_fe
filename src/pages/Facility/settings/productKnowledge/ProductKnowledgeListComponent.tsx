@@ -182,8 +182,16 @@ export function ProductKnowledgeList({
     },
   });
 
-  const [viewMode, setViewMode] = useState<"table" | "cards">("table");
+  const [viewMode, setViewMode] = useState<"table" | "cards">(
+    typeof window !== "undefined" ? (localStorage.getItem("productKnowledgeViewMode") as "table" | "cards") || "table" : "table"
+  );
 
+  // Save view mode to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("productKnowledgeViewMode", viewMode);
+    }
+  }, [viewMode]);
   // Fetch product knowledge for current category
   const { data: productsResponse, isLoading: isLoadingProducts } = useQuery({
     queryKey: ["productKnowledge", facilityId, categorySlug, qParams],
